@@ -1,0 +1,8 @@
+box: releasequeue/ci-buildtools:0.3.5
+
+build:
+    steps:
+        - script:
+            name: Shellfire fatten script
+            code: |
+              echo "Put fatten instructions here"
