@@ -1,3 +1,22 @@
 name: releasequeue-deploy
 version: 0.0.1
 description: Wercker step to deploy packages to a ReleaseQueue repository.
+properties:
+  server:
+    type: string
+    required: true
+  distribution:
+    type: string
+    required: true
+  component:
+    type: string
+    required: true
+  email:
+    type: string
+    required: true
+  password:
+    type: string
+    required: true
+  package:
+    type: string
+    required: true

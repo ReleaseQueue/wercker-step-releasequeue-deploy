@@ -1,0 +1,27 @@
+[submodule "lib/shellfire/core"]
+	path = lib/shellfire/core
+	url = https://github.com/shellfire-dev/core.git
+[submodule "lib/shellfire/curl"]
+	path = lib/shellfire/curl
+	url = https://github.com/shellfire-dev/curl.git
+[submodule "etc/shellfire/paths.d"]
+	path = etc/shellfire/paths.d
+	url = https://github.com/shellfire-dev/paths.d.git
+[submodule "lib/shellfire/urlencode"]
+	path = lib/shellfire/urlencode
+	url = https://github.com/shellfire-dev/urlencode.git
+[submodule "lib/shellfire/version"]
+	path = lib/shellfire/version
+	url = https://github.com/shellfire-dev/version.git
+[submodule "lib/shellfire/jsonwriter"]
+	path = lib/shellfire/jsonwriter
+	url = https://github.com/shellfire-dev/jsonwriter.git
+[submodule "lib/shellfire/jsonreader"]
+	path = lib/shellfire/jsonreader
+	url = https://github.com/shellfire-dev/jsonreader.git
+[submodule "lib/shellfire/unicode"]
+	path = lib/shellfire/unicode
+	url = https://github.com/shellfire-dev/unicode.git
+[submodule "lib/shellfire/fatten"]
+	path = lib/shellfire/fatten
+	url = https://github.com/shellfire-dev/fatten.git

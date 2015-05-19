@@ -5,4 +5,10 @@ build:
         - script:
             name: Shellfire fatten script
             code: |
-              echo "Put fatten instructions here"
+              git submodule update --init
+              cd lib/shellfire/fatten/
+              git submodule update --init
+              ./fatten -f -v --repository-path ../../../ --output-path ../../../output --bin-path / -- package_uploader
+              cd -
+              mv ./output/package_uploader ./run.sh
+              rm -rf output
