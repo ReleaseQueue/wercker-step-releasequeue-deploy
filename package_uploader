@@ -26,7 +26,7 @@ _program()
 
         jsonwriter_object string email "$package_uploader_email" string password "$package_uploader_password"  >"$curl_uploadFile"
 
-        curl_http none '' POST "$package_uploader_server/api/users/sign_in"  "$responseFile" Content-Type application/json
+        curl_http none '' POST "$package_uploader_server/users/sign_in"  "$responseFile" Content-Type application/json
         cat "$responseFile"
         echo "\n$curl_httpStatusCode"
 
@@ -65,7 +65,7 @@ _program()
 
         core_temporaryFiles_newFileToRemoveOnExit
         responseFile=$TMP_FILE
-        url="$package_uploader_server/api/users/$package_uploader_userId/repositories/$repository/$package_uploader_distribution/$package_uploader_component/packages"
+        url="$package_uploader_server/users/$package_uploader_userId/repositories/$repository/packages?distribution=$package_uploader_distribution&component=$package_uploader_component"
 
         curl -X POST --header "x-auth-token:$package_uploader_authToken" -F file=@$packageFile $url
     }
