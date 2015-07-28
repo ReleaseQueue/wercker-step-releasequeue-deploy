@@ -26,7 +26,7 @@ _program()
 
         jsonwriter_object string email "$package_uploader_email" string password "$package_uploader_password"  >"$curl_uploadFile"
 
-        curl_http none '' POST "$package_uploader_server/users/sign_in"  "$responseFile" Content-Type application/json
+        curl_http none '' POST "$package_uploader_server/signin"  "$responseFile" Content-Type application/json
         cat "$responseFile"
         echo "\n$curl_httpStatusCode"
 
@@ -35,10 +35,10 @@ _program()
             case "$eventKind" in
                 object)
                     case "$eventKey" in
-                        user_id)
+                        username)
                             package_uploader_userId=$eventValue
                         ;;
-                        auth_token)
+                        token)
                             package_uploader_authToken=$eventValue
                         ;;
                     esac
