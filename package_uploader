@@ -43,12 +43,12 @@ _program_entrypoint='package_uploader'
 
 _program_commandLine_parseInitialise()
 {
-    core_variable_isSet RELEASEQUEUE_DEPLOY_SERVER && package_uploader_server=$RELEASEQUEUE_DEPLOY_SERVER
-    core_variable_isSet RELEASEQUEUE_DEPLOY_DISTRIBUTION && package_uploader_distribution=$RELEASEQUEUE_DEPLOY_DISTRIBUTION
-    core_variable_isSet RELEASEQUEUE_DEPLOY_USERNAME && package_uploader_username=$RELEASEQUEUE_DEPLOY_USERNAME
-    core_variable_isSet RELEASEQUEUE_DEPLOY_API_KEY && package_uploader_api_key=$RELEASEQUEUE_DEPLOY_API_KEY
-    core_variable_isSet RELEASEQUEUE_DEPLOY_COMPONENT && package_uploader_component=$RELEASEQUEUE_DEPLOY_COMPONENT
-    core_variable_isSet RELEASEQUEUE_DEPLOY_PACKAGE && package_uploader_package_file=$RELEASEQUEUE_DEPLOY_PACKAGE
+    core_variable_isSet WERCKER_RELEASEQUEUE_DEPLOY_SERVER && package_uploader_server=$RELEASEQUEUE_DEPLOY_SERVER
+    core_variable_isSet WERCKER_RELEASEQUEUE_DEPLOY_DISTRIBUTION && package_uploader_distribution=$RELEASEQUEUE_DEPLOY_DISTRIBUTION
+    core_variable_isSet WERCKER_RELEASEQUEUE_DEPLOY_USERNAME && package_uploader_username=$RELEASEQUEUE_DEPLOY_USERNAME
+    core_variable_isSet WERCKER_RELEASEQUEUE_DEPLOY_API_KEY && package_uploader_api_key=$RELEASEQUEUE_DEPLOY_API_KEY
+    core_variable_isSet WERCKER_RELEASEQUEUE_DEPLOY_COMPONENT && package_uploader_component=$RELEASEQUEUE_DEPLOY_COMPONENT
+    core_variable_isSet WERCKER_RELEASEQUEUE_DEPLOY_PACKAGE && package_uploader_package_file=$RELEASEQUEUE_DEPLOY_PACKAGE
     true
 }
 
@@ -73,7 +73,6 @@ _program_commandLine_helpMessage()
     RELEASEQUEUE_DEPLOY_SERVER=http://127.0.0.1:4001 RELEASEQUEUE_DEPLOY_DISTRIBUTION=dist RELEASEQUEUE_DEPLOY_USERNAME=username RELEASEQUEUE_DEPLOY_API_KEY=apikey RELEASEQUEUE_DEPLOY_COMPONENT=comp RELEASEQUEUE_DEPLOY_PACKAGE=package_file.deb ${_program_name}
 "
 }
-
 
 _program_commandLine_optionExists()
 {
