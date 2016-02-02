@@ -2,7 +2,7 @@
 A Wercker step to upload deb/rpm packages to ReleaseQueue Server
 Example usage:
 ```
-    - releasequeue/releasequeue-deploy@0.0.7:
+    - releasequeue/releasequeue-deploy@0.0.10:
         distribution: "trusty"
         component: "extras"
         username: "admin"

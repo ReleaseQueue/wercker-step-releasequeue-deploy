@@ -1,5 +1,5 @@
 name: releasequeue-deploy
-version: 0.0.9
+version: 0.0.10
 description: Wercker step to deploy packages to a ReleaseQueue repository.
 properties:
   server:
