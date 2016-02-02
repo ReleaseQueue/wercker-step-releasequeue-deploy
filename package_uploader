@@ -8,50 +8,9 @@ _program()
 
     package_uploader()
     {
-        echo "Uploading package_uploader_packageFile to $package_uploader_server"
-        package_uploader_getToken
-        package_uploader_upload "$package_uploader_packageFile"
+        echo "Uploading package_uploader_package_file to $package_uploader_server"
+        package_uploader_upload "$package_uploader_package_file"
     }
-
-    package_uploader_getToken()
-    {
-        local curl_httpStatusCode
-        local TMP_FILE
-        local responseFile
-        local curl_uploadFile
-        core_temporaryFiles_newFileToRemoveOnExit
-        responseFile=$TMP_FILE
-        core_temporaryFiles_newFileToRemoveOnExit
-        curl_uploadFile=$TMP_FILE
-
-        jsonwriter_object string email "$package_uploader_email" string password "$package_uploader_password"  >"$curl_uploadFile"
-
-        curl_http none '' POST "$package_uploader_server/signin"  "$responseFile" Content-Type application/json
-        cat "$responseFile"
-        echo "\n$curl_httpStatusCode"
-
-        package_uploader_convertJsonFileToXml_callback()
-        {
-            case "$eventKind" in
-                object)
-                    case "$eventKey" in
-                        username)
-                            package_uploader_userId=$eventValue
-                        ;;
-                        token)
-                            package_uploader_authToken=$eventValue
-                        ;;
-                    esac
-                ;;
-            esac
-        }
-
-        jsonreader_parse "$responseFile" package_uploader_convertJsonFileToXml_callback
-        core_variable_isUnsetOrEmpty "package_uploader_userId" && core_exitError $core_commandLine_exitCode_SOFTWARE "Failed to retrieve data from server"
-        core_variable_isUnsetOrEmpty "package_uploader_authToken" && core_exitError $core_commandLine_exitCode_SOFTWARE "Failed to retrieve data from server"
-        true
-    }
-
 
     package_uploader_upload()
     {
@@ -65,9 +24,9 @@ _program()
 
         core_temporaryFiles_newFileToRemoveOnExit
         responseFile=$TMP_FILE
-        url="$package_uploader_server/users/$package_uploader_userId/repositories/$repository/packages?distribution=$package_uploader_distribution&component=$package_uploader_component"
+        url="$package_uploader_server/users/$package_uploader_username/repositories/$repository/packages?distribution=$package_uploader_distribution&component=$package_uploader_component"
 
-        curl -X POST --header "x-auth-token:$package_uploader_authToken" -F file=@$packageFile $url
+        curl -X POST --header "Authorization:Bearer $package_uploader_api_key" -F file=@$packageFile $url
     }
 
 }
@@ -86,10 +45,10 @@ _program_commandLine_parseInitialise()
 {
     core_variable_isSet RELEASEQUEUE_DEPLOY_SERVER && package_uploader_server=$RELEASEQUEUE_DEPLOY_SERVER
     core_variable_isSet RELEASEQUEUE_DEPLOY_DISTRIBUTION && package_uploader_distribution=$RELEASEQUEUE_DEPLOY_DISTRIBUTION
-    core_variable_isSet RELEASEQUEUE_DEPLOY_EMAIL && package_uploader_email=$RELEASEQUEUE_DEPLOY_EMAIL
-    core_variable_isSet RELEASEQUEUE_DEPLOY_PASSWORD && package_uploader_password=$RELEASEQUEUE_DEPLOY_PASSWORD
+    core_variable_isSet RELEASEQUEUE_DEPLOY_USERNAME && package_uploader_username=$RELEASEQUEUE_DEPLOY_USERNAME
+    core_variable_isSet RELEASEQUEUE_DEPLOY_API_KEY && package_uploader_api_key=$RELEASEQUEUE_DEPLOY_API_KEY
     core_variable_isSet RELEASEQUEUE_DEPLOY_COMPONENT && package_uploader_component=$RELEASEQUEUE_DEPLOY_COMPONENT
-    core_variable_isSet RELEASEQUEUE_DEPLOY_PACKAGE && package_uploader_packageFile=$RELEASEQUEUE_DEPLOY_PACKAGE
+    core_variable_isSet RELEASEQUEUE_DEPLOY_PACKAGE && package_uploader_package_file=$RELEASEQUEUE_DEPLOY_PACKAGE
     true
 }
 
@@ -98,14 +57,20 @@ _program_commandLine_helpMessage()
     _program_commandLine_helpMessage_usage="[OPTION]... -- [PACKAGE FILE]..."
     _program_commandLine_helpMessage_description="Uploads package to ReleaseQueue"
     _program_commandLine_helpMessage_options="
-    --server URL      Server URL."
+    --server URL            Server URL.
+    --distribution dist     Package distribution
+    --component comp        Package component
+    --username              ReleaseQueue username
+    --api-key apikey        ReleaseQueue api key
+    package                 Package to upload
+    "
     _program_commandLine_helpMessage_optionsSpacing='     '
     _program_commandLine_helpMessage_configurationKeys="
 "
     _program_commandLine_helpMessage_examples="
-    ${_program_name} --server http://127.0.0.1:4001 --distribution dist --component comp --email test_user@rq.com --password test_pass package_file.deb
+    ${_program_name} --server 127.0.0.1:4000 --distribution trusty --component extras --username admin --api-key apikey package.deb
     Or set the options as env variables before calling
-    RELEASEQUEUE_DEPLOY_SERVER=http://127.0.0.1:4001 RELEASEQUEUE_DEPLOY_DISTRIBUTION=dist RELEASEQUEUE_DEPLOY_EMAIL=test_user@rq.com RELEASEQUEUE_DEPLOY_PASSWORD=test_pass RELEASEQUEUE_DEPLOY_COMPONENT=comp RELEASEQUEUE_DEPLOY_PACKAGE=package_file.deb ${_program_name}
+    RELEASEQUEUE_DEPLOY_SERVER=http://127.0.0.1:4001 RELEASEQUEUE_DEPLOY_DISTRIBUTION=dist RELEASEQUEUE_DEPLOY_USERNAME=username RELEASEQUEUE_DEPLOY_API_KEY=apikey RELEASEQUEUE_DEPLOY_COMPONENT=comp RELEASEQUEUE_DEPLOY_PACKAGE=package_file.deb ${_program_name}
 "
 }
 
@@ -122,11 +87,11 @@ _program_commandLine_optionExists()
         echo 'yes-argumented'
     ;;
 
-    email)
+    username)
         echo 'yes-argumented'
     ;;
 
-    password)
+    api-key)
         echo 'yes-argumented'
     ;;
 
@@ -154,8 +119,12 @@ _program_commandLine_processOptionWithArgument()
             package_uploader_distribution="$optionValue"
         ;;
 
-        email)
-            package_uploader_email="$optionValue"
+        username)
+            package_uploader_username="$optionValue"
+        ;;
+
+        api-key)
+            package_uploader_api_key="$optionValue"
         ;;
 
         password)
@@ -177,7 +146,7 @@ _program_commandLine_processOptionWithArgument()
 _program_commandLine_handleNonOptions()
 {
     if core_variable_matches $# 1; then
-        package_uploader_packageFile=$1
+        package_uploader_package_file=$1
     fi
     true
 }
@@ -191,11 +160,13 @@ _program_commandLine_validate()
 
     core_variable_isUnsetOrEmpty "package_uploader_component" && core_exitError $core_commandLine_exitCode_USAGE "Component option is mandatory"
 
-    core_variable_isUnsetOrEmpty "package_uploader_email" && core_exitError $core_commandLine_exitCode_USAGE "Email option is mandatory"
+    core_variable_isUnsetOrEmpty "package_uploader_username" && core_exitError $core_commandLine_exitCode_USAGE "Username option is mandatory"
 
-    core_variable_isUnsetOrEmpty "package_uploader_password" && core_exitError $core_commandLine_exitCode_USAGE "Password option is mandatory"
+    core_variable_isUnsetOrEmpty "package_uploader_api_key" && core_exitError $core_commandLine_exitCode_USAGE "Api key option is mandatory"
 
-    core_validate_filePathReadable $core_commandLine_exitCode_USAGE 'option' 'package path' "$package_uploader_packageFile"
+    core_variable_isUnsetOrEmpty "package_uploader_package_file" && core_exitError $core_commandLine_exitCode_USAGE "Specify package"
+
+    core_validate_filePathReadable $core_commandLine_exitCode_USAGE 'option' 'package path' "$package_uploader_package_file"
 
     true
 }
