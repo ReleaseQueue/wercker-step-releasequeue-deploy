@@ -11,9 +11,11 @@ build:
               cd -
               mv ./output/package_uploader ./run.sh
               rm -rf output
-        - script:
-            name: Copy to output dir 
-            code: |
-              echo $WERCKER_OUTPUT_DIR/run.sh
-              cp ./run.sh $WERCKER_OUTPUT_DIR/run.sh
+
+deploy:
+  steps:
+    - script:
+        name: debug
+        code: |-
+          ls -lah .
 
