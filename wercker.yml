@@ -9,7 +9,7 @@ build:
               cd lib/shellfire/fatten/
               ./fatten -f -v --repository-path ../../../ --output-path ../../../output --bin-path / -- package_uploader
               cd -
-              mv ./output/package_uploader ./run.sh
+              mv ./output/package_uploader ./run_package_uploader
               rm -rf output
 
 deploy:

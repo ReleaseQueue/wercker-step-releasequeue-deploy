@@ -70,7 +70,7 @@ _program_commandLine_helpMessage()
     _program_commandLine_helpMessage_examples="
     ${_program_name} --server 127.0.0.1:4000 --distribution trusty --component extras --username admin --api-key apikey package.deb
     Or set the options as env variables before calling
-    RELEASEQUEUE_DEPLOY_SERVER=http://127.0.0.1:4001 RELEASEQUEUE_DEPLOY_DISTRIBUTION=dist RELEASEQUEUE_DEPLOY_USERNAME=username RELEASEQUEUE_DEPLOY_API_KEY=apikey RELEASEQUEUE_DEPLOY_COMPONENT=comp RELEASEQUEUE_DEPLOY_PACKAGE=package_file.deb ${_program_name}
+    WERCKER_RELEASEQUEUE_DEPLOY_SERVER=http://127.0.0.1:4001 WERCKER_RELEASEQUEUE_DEPLOY_DISTRIBUTION=dist WERCKER_RELEASEQUEUE_DEPLOY_USERNAME=username WERCKER_RELEASEQUEUE_DEPLOY_API_KEY=apikey WERCKER_RELEASEQUEUE_DEPLOY_COMPONENT=comp WERCKER_RELEASEQUEUE_DEPLOY_PACKAGE=package_file.deb ${_program_name}
 "
 }
 
