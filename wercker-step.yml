@@ -1,5 +1,5 @@
 name: releasequeue-deploy
-version: 0.0.2
+version: 0.0.3
 description: Wercker step to deploy packages to a ReleaseQueue repository.
 properties:
   server:
@@ -11,10 +11,10 @@ properties:
   component:
     type: string
     required: true
-  email:
+  username:
     type: string
     required: true
-  password:
+  apikey:
     type: string
     required: true
   package:
