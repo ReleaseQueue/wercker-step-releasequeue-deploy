@@ -1,11 +1,11 @@
 name: releasequeue-deploy
-version: 0.0.8
+version: 0.0.9
 description: Wercker step to deploy packages to a ReleaseQueue repository.
 properties:
   server:
     type: string
     required: true
-    default: api.releasequeue.com
+    default: https://api.releasequeue.com
   distribution:
     type: string
     required: true
