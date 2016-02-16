@@ -26,7 +26,9 @@ _program()
         responseFile=$TMP_FILE
         url="$package_uploader_server/users/$package_uploader_username/repositories/$repository/packages?distribution=$package_uploader_distribution&component=$package_uploader_component"
 
-        curl -X POST --header "Authorization:Bearer $package_uploader_api_key" -F file=@$packageFile $url
+        curl -i -o $responseFile -X POST --header "Authorization:Bearer $package_uploader_api_key" -F file=@$packageFile $url
+        cat $responseFile
+        grep "HTTP/1.1 200 OK" $responseFile || { echo "Error status from server"; exit 1; }
     }
 
 }
