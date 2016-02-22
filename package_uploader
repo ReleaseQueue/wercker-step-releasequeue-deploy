@@ -8,7 +8,7 @@ _program()
 
     package_uploader()
     {
-        echo "Uploading package_uploader_package_file to $package_uploader_server"
+        echo "Uploading $package_uploader_package_file to $package_uploader_server."
         package_uploader_upload "$package_uploader_package_file"
     }
 
@@ -27,6 +27,7 @@ _program()
         url="$package_uploader_server/users/$package_uploader_username/repositories/$repository/packages?distribution=$package_uploader_distribution&component=$package_uploader_component"
 
         curl -i -o $responseFile -X POST --header "Authorization:Bearer $package_uploader_api_key" -F file=@$packageFile $url
+        echo "Request finished."
         cat $responseFile
         grep "HTTP/1.1 200 OK" $responseFile || { echo "Error status from server"; exit 1; }
     }
